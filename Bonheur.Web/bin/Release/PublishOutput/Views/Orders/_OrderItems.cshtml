@@ -1,0 +1,70 @@
+﻿@model Bonheur.Web.Models.BonheurObjects.OrderObject
+  
+
+
+<table class="table" title="Order">
+    <tr>
+        <th class="hidden-xs">
+            Item Number
+        </th>
+        <th>
+            Product Name
+        </th>
+        <th>
+           Amount
+        </th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    @{int x = 1; }
+@foreach (var item in Model.Order.OrderItems) {
+    <tr>
+        <td class="hidden-xs">
+            @x
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+       
+        <td>
+           
+            
+
+            @if (!item.IsServed)
+            {
+                @Html.ActionLink("Served", "SetServed", new { id = item.OrderItemID, orderid = item.OrderID }, new { @class = "btn btn-success" });
+            }
+            else
+            {
+                @Html.Label("Completed");
+            }
+        </td>
+        <td>
+
+            @if (!item.IsServed)
+            {
+                if (!Model.Order.isPaid)
+                {
+                    @Html.ActionLink("Cancel", "RemoveOrder", new { id = item.OrderItemID, orderid = item.OrderID }, new { @class = "btn btn-danger" });
+                }
+            }
+        </td>
+    </tr>
+    x++;
+}
+    <tfoot>
+        <tr>
+            <td>Total</td>
+            <td></td>
+            <td>@Model.RunningAmount.ToString()</td>
+            
+            <td></td>
+            <td></td>
+        </tr>
+       
+    </tfoot>
+</table>
+

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Bonheur.Web.Models.Purchase>
+
+@{
+    ViewBag.Title = "Index";
+    Decimal Amount = 0;
+    Decimal TotalAmount = 0;
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("+ New", "Create",null, new { @class = "btn btn-success" })
+</p>
+
+<div class="row">
+
+    @foreach (var item in Model)
+    {
+        Amount = item.PurchaseItems.Sum(a => a.Amount * a.UnitCount);
+        <div class="col-sm-6 col-md-4 col-xs-12 col-lg-2">
+            <div class="thumbnail">
+                <a href="@Url.Action("Edit", "Purchases", new { id = item.PurchaseID })">
+                    <img src="/Images/receipt.png">
+                </a>
+
+                <div class="text-center">
+                    <strong>@Amount.ToString("N2")</strong><br />
+                    <div>@item.InvoiceNumber</div>
+                    <div>@item.CreatedDate.ToShortDateString()</div>
+                    <div>@item.Supplier.Name</div>
+
+
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PurchaseID }, new { @class = "btn btn-success" })
+                </div>
+               
+               
+                
+
+            </div>
+        </div>
+    }
+</div>

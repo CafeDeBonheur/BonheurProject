@@ -1,0 +1,33 @@
+﻿@model Bonheur.Web.Models.BonheurObjects.OrderObject
+
+@{
+    var x = 1;
+ }
+
+   <div class="panel panel-success">
+    <div class="panel-heading">Order on Queue</div>
+    <div class="panel-body">
+      
+
+        <ul class="list-group">
+            @{if (Model.OrderItems.Count() == 0)
+            {
+                <li class="list-group-item"> No order received</li>}
+            }
+            @foreach (var item in Model.OrderItems.GroupBy(a => a.Product.Name).Select(group => new { ProductName = group.Key, Count = group.Count() }))
+        {
+
+            <li class="list-group-item"> <span class="badge">@Html.DisplayFor(modelItem => item.Count)</span> @Html.DisplayFor(modelItem => item.ProductName)</li>
+
+        x++;
+
+    }
+
+
+        </ul>
+    </div>
+
+
+   
+</div>
+

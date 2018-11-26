@@ -1,0 +1,366 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BonheurStoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Firstname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Lastname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK_Order_ToTable" FromRole="Customer" ToRole="Order" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="OrderID" />
+    </Key>
+    <Property Name="OrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerID" Type="Int32" Nullable="false" />
+    <Property Name="isPaid" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Customer" Relationship="Self.FK_Order_ToTable" FromRole="Order" ToRole="Customer" />
+    <NavigationProperty Name="OrderItems" Relationship="BonheurStoreModel.FK_OrderItem_ToTable_1" FromRole="Order" ToRole="OrderItem" />
+    <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Payments" Relationship="BonheurStoreModel.FK_Table_ToTable" FromRole="Order" ToRole="Payment" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="OrderItem">
+    <Key>
+      <PropertyRef Name="OrderItemID" />
+    </Key>
+    <Property Name="OrderItemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <NavigationProperty Name="Product" Relationship="Self.FK_OrderItem_ToTable" FromRole="OrderItem" ToRole="Product" />
+    <Property Name="OrderID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Order" Relationship="BonheurStoreModel.FK_OrderItem_ToTable_1" FromRole="OrderItem" ToRole="Order" />
+    <Property Name="IsServed" Type="Boolean" Nullable="false" />
+    <Property Name="isTakeOut" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ProductURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="OrderItems" Relationship="Self.FK_OrderItem_ToTable" FromRole="Product" ToRole="OrderItem" />
+    <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CategoryID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Category" Relationship="BonheurStoreModel.FK_Product_ToTable" FromRole="Product" ToRole="Category" />
+  </EntityType>
+  <Association Name="FK_Order_ToTable">
+    <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+    <End Role="Order" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="CustomerID" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="CustomerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrderItem_ToTable">
+    <End Role="Product" Type="Self.Product" Multiplicity="1" />
+    <End Role="OrderItem" Type="Self.OrderItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="OrderItem">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BonheurStoreEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Customers" EntityType="Self.Customer" />
+    <EntitySet Name="Orders" EntityType="Self.Order" />
+    <EntitySet Name="OrderItems" EntityType="Self.OrderItem" />
+    <EntitySet Name="Products" EntityType="Self.Product" />
+    <AssociationSet Name="FK_Order_ToTable" Association="Self.FK_Order_ToTable">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Order" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrderItem_ToTable" Association="Self.FK_OrderItem_ToTable">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="OrderItem" EntitySet="OrderItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrderItem_ToTable_1" Association="BonheurStoreModel.FK_OrderItem_ToTable_1">
+      <End Role="Order" EntitySet="Orders" />
+      <End Role="OrderItem" EntitySet="OrderItems" />
+    </AssociationSet>
+    <EntitySet Name="Payments" EntityType="BonheurStoreModel.Payment" />
+    <AssociationSet Name="FK_Table_ToTable" Association="BonheurStoreModel.FK_Table_ToTable">
+      <End Role="Order" EntitySet="Orders" />
+      <End Role="Payment" EntitySet="Payments" />
+    </AssociationSet>
+    <EntitySet Name="Categories" EntityType="BonheurStoreModel.Category" />
+    <AssociationSet Name="FK_Product_ToTable" Association="BonheurStoreModel.FK_Product_ToTable">
+      <End Role="Category" EntitySet="Categories" />
+      <End Role="Product" EntitySet="Products" />
+    </AssociationSet>
+    <EntitySet Name="Assets" EntityType="BonheurStoreModel.Asset" />
+    <EntitySet Name="Expenses" EntityType="BonheurStoreModel.Expense" />
+    <EntitySet Name="Purchases" EntityType="BonheurStoreModel.Purchase" />
+    <EntitySet Name="PurchaseCategories" EntityType="BonheurStoreModel.PurchaseCategory" />
+    <EntitySet Name="PurchaseItems" EntityType="BonheurStoreModel.PurchaseItem" />
+    <AssociationSet Name="FK_PurchaseItem_ToTable" Association="BonheurStoreModel.FK_PurchaseItem_ToTable">
+      <End Role="Purchase" EntitySet="Purchases" />
+      <End Role="PurchaseItem" EntitySet="PurchaseItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PurchaseItem_ToTable_1" Association="BonheurStoreModel.FK_PurchaseItem_ToTable_1">
+      <End Role="PurchaseCategory" EntitySet="PurchaseCategories" />
+      <End Role="PurchaseItem" EntitySet="PurchaseItems" />
+    </AssociationSet>
+    <EntitySet Name="Suppliers" EntityType="BonheurStoreModel.Supplier" />
+    <EntitySet Name="Tables" EntityType="BonheurStoreModel.Table" />
+    <AssociationSet Name="FK_Purchase_ToTable" Association="BonheurStoreModel.FK_Purchase_ToTable">
+      <End Role="Supplier" EntitySet="Suppliers" />
+      <End Role="Purchase" EntitySet="Purchases" />
+    </AssociationSet>
+    <EntitySet Name="CashOpeningClosings" EntityType="BonheurStoreModel.CashOpeningClosing" />
+    <EntitySet Name="Employees" EntityType="BonheurStoreModel.Employee" />
+    <EntitySet Name="Salaries" EntityType="BonheurStoreModel.Salary" />
+    <AssociationSet Name="FK_Salary_ToEmployee" Association="BonheurStoreModel.FK_Salary_ToEmployee">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Salary" EntitySet="Salaries" />
+    </AssociationSet>
+    <EntitySet Name="InventoryCategories" EntityType="BonheurStoreModel.InventoryCategory" />
+    <EntitySet Name="InventoryItems" EntityType="BonheurStoreModel.InventoryItem" />
+    <AssociationSet Name="FK_InventoryItem_ToInvetoryCaregory" Association="BonheurStoreModel.FK_InventoryItem_ToInvetoryCaregory">
+      <End Role="InventoryCategory" EntitySet="InventoryCategories" />
+      <End Role="InventoryItem" EntitySet="InventoryItems" />
+    </AssociationSet>
+  </EntityContainer>
+  <Association Name="FK_OrderItem_ToTable_1">
+    <End Type="BonheurStoreModel.Order" Role="Order" Multiplicity="1" />
+    <End Type="BonheurStoreModel.OrderItem" Role="OrderItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="OrderID" />
+      </Principal>
+      <Dependent Role="OrderItem">
+        <PropertyRef Name="OrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Payment">
+    <Key>
+      <PropertyRef Name="PaymentID" />
+    </Key>
+    <Property Name="PaymentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="OrderID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Order" Relationship="BonheurStoreModel.FK_Table_ToTable" FromRole="Payment" ToRole="Order" />
+    <Property Name="OrderAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="ChangeAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+  </EntityType>
+  <Association Name="FK_Table_ToTable">
+    <End Type="BonheurStoreModel.Order" Role="Order" Multiplicity="1" />
+    <End Type="BonheurStoreModel.Payment" Role="Payment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="OrderID" />
+      </Principal>
+      <Dependent Role="Payment">
+        <PropertyRef Name="OrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="CategoryID" />
+    </Key>
+    <Property Name="CategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OrderNumber" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Products" Relationship="BonheurStoreModel.FK_Product_ToTable" FromRole="Category" ToRole="Product" />
+  </EntityType>
+  <Association Name="FK_Product_ToTable">
+    <End Type="BonheurStoreModel.Category" Role="Category" Multiplicity="1" />
+    <End Type="BonheurStoreModel.Product" Role="Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="CategoryID" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="CategoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Asset">
+    <Key>
+      <PropertyRef Name="AssetID" />
+    </Key>
+    <Property Name="AssetID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="createdDate" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="Expense">
+    <Key>
+      <PropertyRef Name="ExpenseID" />
+    </Key>
+    <Property Name="ExpenseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ExpenseTypeID" Type="Int32" Nullable="false" />
+    <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="Purchase">
+    <Key>
+      <PropertyRef Name="PurchaseID" />
+    </Key>
+    <Property Name="PurchaseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="SupplierID" Type="Int32" Nullable="false" />
+    <Property Name="InvoiceNumber" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="PurchaseItems" Relationship="BonheurStoreModel.FK_PurchaseItem_ToTable" FromRole="Purchase" ToRole="PurchaseItem" />
+    <NavigationProperty Name="Supplier" Relationship="BonheurStoreModel.FK_Purchase_ToTable" FromRole="Purchase" ToRole="Supplier" />
+    <Property Name="IsFinalize" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PurchaseCategory">
+    <Key>
+      <PropertyRef Name="PurchaseCategoryID" />
+    </Key>
+    <Property Name="PurchaseCategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="PurchaseItems" Relationship="BonheurStoreModel.FK_PurchaseItem_ToTable_1" FromRole="PurchaseCategory" ToRole="PurchaseItem" />
+  </EntityType>
+  <EntityType Name="PurchaseItem">
+    <Key>
+      <PropertyRef Name="PurchaseItemID" />
+    </Key>
+    <Property Name="PurchaseItemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PurchaseCategoryID" Type="Int32" Nullable="false" />
+    <Property Name="UnitCount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="PurchaseID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Purchase" Relationship="BonheurStoreModel.FK_PurchaseItem_ToTable" FromRole="PurchaseItem" ToRole="Purchase" />
+    <NavigationProperty Name="PurchaseCategory" Relationship="BonheurStoreModel.FK_PurchaseItem_ToTable_1" FromRole="PurchaseItem" ToRole="PurchaseCategory" />
+  </EntityType>
+  <Association Name="FK_PurchaseItem_ToTable">
+    <End Type="BonheurStoreModel.Purchase" Role="Purchase" Multiplicity="1" />
+    <End Type="BonheurStoreModel.PurchaseItem" Role="PurchaseItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Purchase">
+        <PropertyRef Name="PurchaseID" />
+      </Principal>
+      <Dependent Role="PurchaseItem">
+        <PropertyRef Name="PurchaseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PurchaseItem_ToTable_1">
+    <End Type="BonheurStoreModel.PurchaseCategory" Role="PurchaseCategory" Multiplicity="1" />
+    <End Type="BonheurStoreModel.PurchaseItem" Role="PurchaseItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PurchaseCategory">
+        <PropertyRef Name="PurchaseCategoryID" />
+      </Principal>
+      <Dependent Role="PurchaseItem">
+        <PropertyRef Name="PurchaseCategoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Supplier">
+    <Key>
+      <PropertyRef Name="SupplierID" />
+    </Key>
+    <Property Name="SupplierID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Purchases" Relationship="BonheurStoreModel.FK_Purchase_ToTable" FromRole="Supplier" ToRole="Purchase" />
+  </EntityType>
+  <EntityType Name="Table">
+    <Key>
+      <PropertyRef Name="SupplierID" />
+    </Key>
+    <Property Name="SupplierID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <Association Name="FK_Purchase_ToTable">
+    <End Type="BonheurStoreModel.Supplier" Role="Supplier" Multiplicity="1" />
+    <End Type="BonheurStoreModel.Purchase" Role="Purchase" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Supplier">
+        <PropertyRef Name="SupplierID" />
+      </Principal>
+      <Dependent Role="Purchase">
+        <PropertyRef Name="SupplierID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="CashOpeningClosing">
+    <Key>
+      <PropertyRef Name="CashOpeningID" />
+    </Key>
+    <Property Name="CashOpeningID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Cash" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CashType" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+    </Key>
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Firstname" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Lastname" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="RatePerDay" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Salaries" Relationship="BonheurStoreModel.FK_Salary_ToEmployee" FromRole="Employee" ToRole="Salary" />
+  </EntityType>
+  <EntityType Name="Salary">
+    <Key>
+      <PropertyRef Name="SalaryID" />
+    </Key>
+    <Property Name="SalaryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SalaryDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+    <NavigationProperty Name="Employee" Relationship="BonheurStoreModel.FK_Salary_ToEmployee" FromRole="Salary" ToRole="Employee" />
+  </EntityType>
+  <Association Name="FK_Salary_ToEmployee">
+    <End Type="BonheurStoreModel.Employee" Role="Employee" Multiplicity="1" />
+    <End Type="BonheurStoreModel.Salary" Role="Salary" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmployeeID" />
+      </Principal>
+      <Dependent Role="Salary">
+        <PropertyRef Name="EmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="InventoryCategory">
+    <Key>
+      <PropertyRef Name="InventoryCategoryID" />
+    </Key>
+    <Property Name="InventoryCategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="InventoryItems" Relationship="BonheurStoreModel.FK_InventoryItem_ToInvetoryCaregory" FromRole="InventoryCategory" ToRole="InventoryItem" />
+  </EntityType>
+  <EntityType Name="InventoryItem">
+    <Key>
+      <PropertyRef Name="InventoryItemID" />
+    </Key>
+    <Property Name="InventoryItemID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="InventoryCategoryID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="InventoryCategory" Relationship="BonheurStoreModel.FK_InventoryItem_ToInvetoryCaregory" FromRole="InventoryItem" ToRole="InventoryCategory" />
+    <Property Name="Unit" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <Association Name="FK_InventoryItem_ToInvetoryCaregory">
+    <End Type="BonheurStoreModel.InventoryCategory" Role="InventoryCategory" Multiplicity="1" />
+    <End Type="BonheurStoreModel.InventoryItem" Role="InventoryItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InventoryCategory">
+        <PropertyRef Name="InventoryCategoryID" />
+      </Principal>
+      <Dependent Role="InventoryItem">
+        <PropertyRef Name="InventoryCategoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

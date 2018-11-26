@@ -1,0 +1,52 @@
+﻿
+@model IEnumerable<Bonheur.Web.Models.BonheurObjects.DailSalesReportObject>
+
+@{
+    var x = 1;
+    Decimal total = 0;
+    ViewBag.Title = "DailySales";
+}
+
+<h2>Daily Sales Report</h2>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Daily Sales Report</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item Number</th>
+                <th>Date</th>
+                
+                <th>Item Sold</th>
+                <th>Total Sales</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+           @foreach (var item in Model.OrderBy(a=>a.CreatedDate))
+           {
+            <tr>
+                <td>@x</td>
+                <td>@item.CreatedDate.Value.ToShortDateString()</td>
+                <td>@item.ItemSold</td>
+                <td>@item.Amount.ToString("N")</td>
+                <td>@Html.ActionLink("Details","DailySalesDetails", new { d = @item.CreatedDate.Value.ToShortDateString() })</td>
+               
+            </tr>
+               x++;
+               total = total + item.Amount;
+           }
+            
+           
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td></td>
+                <td>@total.ToString("N")</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

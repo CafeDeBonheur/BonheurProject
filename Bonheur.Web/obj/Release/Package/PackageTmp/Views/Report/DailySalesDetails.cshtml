@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Bonheur.Web.Models.BonheurObjects.DailSalesDetailedReportObject>
+
+@{
+    ViewBag.Title = "DailySalesDetails";
+    decimal totalAmount = 0;
+    decimal totalUnit = 0;
+    var d = HttpContext.Current.Request.QueryString["d"];
+    DateTime dateSelected;
+    if (DateTime.TryParse(d, out dateSelected))
+    {
+
+    }
+    else
+    {
+        dateSelected = DateTime.Now;
+    }
+
+}
+
+<h2>Daily Sales Details Report</h2>
+<label class="label label-default">Report For: @dateSelected.ToShortDateString()</label>
+<p>
+   
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>Unit</th>
+            <th>
+                Amount
+            </th>
+
+
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+    Decimal rowPerItem = item.Amount / item.ItemSold ;
+    
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemSold)
+           
+        </td>
+       
+        <td>
+            @rowPerItem.ToString("N")
+           
+        </td>
+        <td>@item.Amount.ToString("N")</td>
+    </tr>
+    totalAmount = totalAmount + item.Amount;
+    totalUnit = totalUnit + item.ItemSold;
+}
+</tbody>
+    <tfoot>
+        <tr>
+            <td>
+                
+            </td>
+            <td>@totalUnit</td>
+            <td></td>
+            <td>
+                @totalAmount.ToString("N")
+            </td>
+
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+@Html.ActionLink("Back", "DailySales")
+

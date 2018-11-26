@@ -1,0 +1,112 @@
+﻿@model Bonheur.Web.Models.BonheurObjects.OrderObject
+
+
+@{int x = 1; }
+@foreach (var item in Model.Order.OrderItems)
+{
+
+
+    <div class="col-sm-6 col-md-2">
+        <div class="thumbnail">
+
+            <div class="caption">
+                <h4>PHP @Html.DisplayFor(modelItem => item.Amount)</h4>
+                <p>   @Html.DisplayFor(modelItem => item.Product.Name)</p>
+
+            </div>
+            <div class="text-center">
+
+                @if (!item.IsServed)
+                {
+                    @Html.ActionLink("Served", "SetServed", new { id = item.OrderItemID, orderid = item.OrderID }, new { @class = "btn btn-success" });
+                }
+                else
+                {
+                    @Html.Label("Completed");
+                }
+
+                @if (!item.IsServed)
+                {
+                    if (!Model.Order.isPaid)
+                    {
+                        @Html.ActionLink("Cancel", "RemoveOrder", new { id = item.OrderItemID, orderid = item.OrderID }, new { @class = "btn btn-danger" });
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    x++;
+}
+
+@*<table class="table" title="Order">
+    <tr>
+        <th class="hidden-xs">
+            Item Number
+        </th>
+        <th>
+            Product Name
+        </th>
+        <th>
+            Amount
+        </th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var item in Model.Order.OrderItems)
+    {
+        <tr>
+            <td class="hidden-xs">
+                @x
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+
+            <td>
+
+
+
+                @if (!item.IsServed)
+                {
+                    @Html.ActionLink("Served", "SetServed", new { id = item.OrderItemID, orderid = item.OrderID }, new { @class = "btn btn-success" });
+                }
+                else
+                {
+                    @Html.Label("Completed");
+                }
+            </td>
+            <td>
+
+                @if (!item.IsServed)
+                {
+                    if (!Model.Order.isPaid)
+                    {
+                        @Html.ActionLink("Cancel", "RemoveOrder", new { id = item.OrderItemID, orderid = item.OrderID }, new { @class = "btn btn-danger" });
+                    }
+                }
+            </td>
+        </tr>
+        x++;
+    }
+    <tfoot>
+        <tr>
+            <td>Total</td>
+            <td></td>
+            <td></td>
+
+            <td></td>
+            <td></td>
+        </tr>
+
+    </tfoot>
+</table>*@
+

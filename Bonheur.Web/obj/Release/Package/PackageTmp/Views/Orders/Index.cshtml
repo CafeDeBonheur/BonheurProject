@@ -1,0 +1,163 @@
+﻿@model Bonheur.Web.Models.BonheurObjects.OrderObject
+
+@{
+    ViewBag.Title = "Index";
+    var d = HttpContext.Current.Request.QueryString["d"];
+    DateTime dateSelected;
+    if (DateTime.TryParse(d, out dateSelected))
+    {
+
+    }
+    else
+    {
+        dateSelected = DateTime.Now;
+    }
+}
+
+<br />
+
+<p>
+    @if (Model.TodaySalesObject.CashOpening > 0)
+    {
+    <div class="row">
+        @Html.ActionLink("+ Create New Order", "Create", null, new { @class = "btn btn-success" })
+        @Html.ActionLink("- Cash Out", "_AddPettyCash", null, new { @class = "modal-link btn btn-danger" })
+        @Html.ActionLink("+ Cash In", "_ReturnCash", null, new { @class = "modal-link btn btn-warning" })
+    </div>
+    }
+    else
+    {
+        if(dateSelected == DateTime.Now)
+        { 
+        @Html.ActionLink("+ Cash Opening", "_AddOpeningCash", null, new { @class = "modal-link btn btn-success" })
+        }
+        else
+        {
+
+        }
+    }
+</p>
+
+
+<div class="row text-center">
+    <div class="col-lg-9">
+
+        @foreach (var item in Model.Orders.OrderByDescending(a => a.OrderID))
+        {
+
+            <div class="col-sm-6 col-md-4 col-xs-12 col-lg-2">
+                <div class="thumbnail">
+                    <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })">
+                        <img src="~/Images/queue.jpg" alt="Bonheur Customer" class=" hidden-xs">
+                    </a>
+
+                    <strong>@Html.DisplayFor(modelItem => item.CustomerName) </strong>
+                    <div>
+                        Order Number:@Html.DisplayFor(modelItem => item.OrderID)<br />
+
+
+                        @{
+                            if (item.OrderItems.Count() == 0)
+                            {
+                                @Html.Label("No order yet", new { @class = "label label-default" });
+                            }
+                            else if (item.OrderItems.Count(a => !a.IsServed) > 0)
+                            {
+                                @Html.Label("Pending orders", new { @class = "label label-warning" });
+                            }
+                            else
+                            {
+                                @Html.Label("Orders completed", new { @class = "label label-success" });
+                            }
+                            <br />
+                            if (item.isPaid)
+                            {
+                                @Html.Label("Paid", new { @class = "label label-success" });
+                            }
+                            else
+                            {
+                                @Html.Label("Pending payment", new { @class = "label label-warning" });
+                            }
+
+                        }
+
+                    </div>
+                    <br />
+                    @Html.ActionLink("Details", "Details", new { id = item.OrderID }, new { @class = "btn btn-success" })
+
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-lg-3">
+        @Html.Partial("_ShowPendingOrder")
+
+        <span class="badge alert-success">Opening:@Model.TodaySalesObject.CashOpening.ToString("N2")</span>
+        <span class="badge alert-danger">Cash Out:@Model.TodaySalesObject.PettyCash.ToString("N2")</span>
+        <span class="badge alert-warning">Cash In:@Model.TodaySalesObject.CashReturn.ToString("N2")</span>
+        <span class="badge alert-success">Sales:@Model.TodaySalesObject.RunningSales.ToString("N2")</span>
+        <span class="badge alert-info">Closing: @Model.TodaySalesObject.CashClosing.ToString("N2")</span>
+
+    </div>
+</div>
+<div>
+
+    <ul class="pager">
+        <li class="previous">@Html.ActionLink("<< Previous day", "Index", new { d = @dateSelected.AddDays(-1).ToShortDateString() }, new { @class = "btn btn-default" })</li>
+
+
+        <li class="label label-default">Orders For: @dateSelected.ToShortDateString()</li>
+
+
+        <li class="next">@Html.ActionLink("Next day >>", "Index", new { d = @dateSelected.AddDays(1).ToShortDateString() }, new { @class = "btn btn-default" })</li>
+    </ul>
+</div>
+
+
+
+
+
+<div id="modal-container" class="modal fade"
+     tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(function () {
+            // Initialize numeric spinner input boxes
+            //$(".numeric-spinner").spinedit();
+            // Initialize modal dialog
+            // attach modal-container bootstrap attributes to links with .modal-link class.
+            // when a link is clicked with these attributes, bootstrap will display the href content in a modal dialog.
+            $('body').on('click', '.modal-link', function (e) {
+                e.preventDefault();
+                $(this).attr('data-target', '#modal-container');
+                $(this).attr('data-toggle', 'modal');
+            });
+            // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
+            $('body').on('click', '.modal-close-btn', function () {
+                $('#modal-container').modal('hide');
+            });
+            //clear modal cache, so that new content can be loaded
+            $('#modal-container').on('hidden.bs.modal', function () {
+                $(this).removeData('bs.modal');
+            });
+            $('#CancelModal').on('click', function () {
+                return false;
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () { // will trigger when the document is ready
+            $('.datepicker').datepicker(); //Initialise any date pickers
+        });
+
+
+    </script>
+}

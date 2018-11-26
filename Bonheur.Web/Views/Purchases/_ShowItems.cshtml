@@ -1,0 +1,63 @@
+﻿@model  Bonheur.Web.Models.BonheurObjects.PurchaseObject
+@{
+    Decimal total = 0;
+    Decimal totalperRow = 0;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Item
+            </th>
+            <th>
+                Unit Count
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Total
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Purchase.PurchaseItems) {
+    totalperRow = item.UnitCount * item.Amount;
+    total = total + totalperRow;
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseCategory.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitCount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @totalperRow.ToString("N")
+        </td>
+        
+        <td>
+            @if(!Model.Purchase.IsFinalize)
+            { 
+            @Html.ActionLink("Remove", "DeletePurchaseItem", new { id=item.PurchaseItemID })
+            }
+        </td>
+    </tr>
+}</tbody>
+    <tfoot>
+        <tr>
+            <td>Total</td>
+            <td></td>
+            <td></td>
+            <td>@total.ToString("N")</td>
+           
+            <td></td>
+        </tr>
+    </tfoot>
+
+</table>

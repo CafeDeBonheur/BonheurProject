@@ -1,0 +1,193 @@
+﻿@model Bonheur.Web.Models.BonheurObjects.OrderObject
+
+
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<br />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Order.OrderID)
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Customer Information</h3>
+        </div>
+        <div class="panel-body">
+
+            <div>
+                
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="col-md-2"><img src="~/Images/1.jpg" alt="Bonheur Customer" width="150" height="150"></div>
+                    <div class="col-md-8">
+
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Customer Name:
+                            </dt>
+                            <dd>
+                                @Html.EditorFor(model => model.Order.CustomerName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Name here" } })
+                                @Html.ValidationMessageFor(model => model.Order.CustomerName, "", new { @class = "text-danger" })
+                            </dd>
+
+
+                            <dt>
+                                Order Date:
+                            </dt>
+
+                            <dd>
+
+                                @*@Html.TextBox("Order_CreatedDate", Model.Order.CreatedDate.ToShortDateString(), new { @class = "form -control datepicker", placeholder = "Enter Drop-off date here...",name="Order.CreatedDate"  })*@
+                                @Html.EditorFor(model => model.Order.CreatedDate, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Enter Date of Order here..." } })
+                                @Html.ValidationMessageFor(model => model.Order.CreatedDate, "", new { @class = "text-danger" })
+                            </dd>
+
+                          
+
+                            <dt>
+
+                            </dt>
+                            <dd><input type="submit" value="Save" class="btn btn-default" /></dd>
+
+                        </dl>
+                    </div>
+                    <div class="col-md-2">
+                        @{
+
+                            if (Model.Order.OrderItems.Count(a => !a.IsServed) > 0)
+                            {
+                                @Html.Label("Pending Orders", new { @class = "label label-warning" });
+                            }
+                            else
+                            {
+                                @Html.Label("Orders Completed", new { @class = "label label-success" });
+                            }
+                            <br />
+                            if (Model.Order.isPaid)
+                            {
+                                @Html.Label("Paid", new { @class = "label label-success" });
+                            }
+                            else
+                            {
+                                @Html.Label("Pending Payment", new { @class = "label label-warning" });
+                            }
+
+                        }
+                    </div>
+                </div>
+                
+             
+
+
+
+
+            </div>
+           
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Orders</h3>
+            </div>
+            <div class="panel-body">
+                @Html.Partial("_OrderItems")
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">Payment</h3>
+            </div>
+            <div class="panel-body">
+                @if(@TempData["error"]!=null)
+                { 
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <strong>Oh snap!</strong> @TempData["error"]
+                </div>
+
+                }
+                @Html.Partial("_ShowPayment")
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Menu</h3>
+    </div>
+    <div class="panel-body">
+        @Html.Partial("_ShowMenu")
+    </div>
+</div>
+
+
+@*@Html.Partial("_AddPayment")*@
+
+
+
+<p>
+
+    @Html.ActionLink("Back to List", "Index",null, new { @class = "btn btn-danger" })
+</p>
+
+
+<div id="modal-container" class="modal fade"
+     tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(function () {
+            // Initialize numeric spinner input boxes
+            //$(".numeric-spinner").spinedit();
+            // Initialize modal dialog
+            // attach modal-container bootstrap attributes to links with .modal-link class.
+            // when a link is clicked with these attributes, bootstrap will display the href content in a modal dialog.
+            $('body').on('click', '.modal-link', function (e) {
+                e.preventDefault();
+                $(this).attr('data-target', '#modal-container');
+                $(this).attr('data-toggle', 'modal');
+            });
+            // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
+            $('body').on('click', '.modal-close-btn', function () {
+                $('#modal-container').modal('hide');
+            });
+            //clear modal cache, so that new content can be loaded
+            $('#modal-container').on('hidden.bs.modal', function () {
+                $(this).removeData('bs.modal');
+            });
+            $('#CancelModal').on('click', function () {
+                return false;
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () { // will trigger when the document is ready
+            $('.datepicker').datepicker(); //Initialise any date pickers
+        });
+
+
+    </script>
+}
+
+

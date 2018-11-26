@@ -1,0 +1,42 @@
+﻿@model Bonheur.Web.Models.CashOpeningClosing
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>CashOpeningClosing</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cash)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cash)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CashType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CashType)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.CashOpeningID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

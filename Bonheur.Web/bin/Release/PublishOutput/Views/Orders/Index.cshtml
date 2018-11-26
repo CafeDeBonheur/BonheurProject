@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Bonheur.Web.Models.Order>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("+ Create New Order", "Create",null, new { @class = "btn btn-success" })
+</p>
+
+<div class="row text-center">
+
+
+    @foreach (var item in Model.OrderByDescending(a=>a.OrderID))
+    {
+
+
+
+       
+        <div class="col-sm-6 col-md-4 col-xs-12 col-lg-2">
+            <div class="thumbnail">
+                <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })">
+                    <img src="~/Images/queue.jpg" alt="Bonheur Customer" class=" hidden-xs">
+                </a><br />
+
+                <p><strong>@Html.DisplayFor(modelItem => item.CustomerName) </strong></p>
+                <div>
+                    Order Number:@Html.DisplayFor(modelItem => item.OrderID)<br />
+                  
+
+                    @{
+                        if (item.OrderItems.Count() == 0)
+                        {
+                            @Html.Label("No order yet", new { @class = "label label-default" });
+                        }
+                        else if (item.OrderItems.Count(a => !a.IsServed) > 0)
+                        {
+                            @Html.Label("Pending orders", new { @class = "label label-warning" });
+                        }
+                        else
+                        {
+                            @Html.Label("Orders completed", new { @class = "label label-success" });
+                        }
+                        <br />
+                        if (item.isPaid)
+                        {
+                            @Html.Label("Paid", new { @class = "label label-success" });
+                        }
+                        else
+                        {
+                            @Html.Label("Pending payment", new { @class = "label label-warning" });
+                        }
+
+                    }
+
+                </div>
+                <br />
+                @Html.ActionLink("Details", "Details", new { id = item.OrderID },new { @class = "btn btn-success" })
+           
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+

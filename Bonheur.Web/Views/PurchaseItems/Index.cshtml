@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Bonheur.Web.Models.PurchaseItem>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UnitCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Purchase.InvoiceNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseCategory.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitCount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Purchase.InvoiceNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseCategory.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PurchaseItemID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PurchaseItemID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PurchaseItemID })
+        </td>
+    </tr>
+}
+
+</table>

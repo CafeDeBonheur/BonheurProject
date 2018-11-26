@@ -1,0 +1,42 @@
+﻿@model Bonheur.Web.Models.BonheurObjects.OrderObject
+
+
+<table class="table" title="Payment">
+    <tr>
+       
+        <th>
+            Total Order
+        </th>
+        <th>
+            Amount Paid
+        </th>
+        <th>
+        Change
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.Order.Payments) {
+    <tr>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChangeAmount)
+        </td>
+        <td>
+            @if (!Model.Order.isPaid)
+            {
+            @Html.ActionLink("Remove", "DeletePayment", new { id = item.PaymentID }, new { @class = "btn btn-danger" })}
+        </td>
+    </tr>
+}
+
+</table>
+@if (!Model.Order.isPaid)
+{
+    @Html.ActionLink("Add Payment", "_AddPayment", new { id = Model.Order.OrderID }, new { @class = "modal-link btn btn-success" })}

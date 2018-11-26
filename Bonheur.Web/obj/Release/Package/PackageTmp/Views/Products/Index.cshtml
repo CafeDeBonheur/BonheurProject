@@ -1,0 +1,139 @@
+﻿@model Bonheur.Web.Models.BonheurObjects.OrderObject
+
+@{
+    ViewBag.Title = "Index";
+     var x = 0;
+        var activeclass = "active";
+
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@*<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductURL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductURL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ProductID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ProductID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ProductID })
+        </td>
+    </tr>
+}
+
+</table>*@
+
+
+<ul class="nav nav-tabs">
+
+    @foreach (var cat in Model.Category)
+    {
+        var menuitem = "#menu" + cat.CategoryID;
+
+        if (x == 0)
+        {
+            <li class="active"> <a data-toggle="tab" href=@menuitem>@cat.Name</a></li>}
+        else
+        {
+            <li> <a data-toggle="tab" href=@menuitem>@cat.Name</a></li>}
+        x++;
+    }
+    @{   x = 0; }
+
+
+</ul>
+
+<div class="tab-content">
+
+    @foreach (var cat in Model.Category)
+    {
+        var menuitem = "menu" + cat.CategoryID;
+        if (x == 0)
+        {
+            activeclass = "active in";
+        }
+        else
+        {
+            activeclass = "";
+        }
+        <div id=@menuitem class="tab-pane fade @activeclass">
+            <br />
+
+            <div class="row ">
+                @foreach (var item in cat.Products.Where(a => a.CategoryID == cat.CategoryID).OrderBy(a=>a.Name))
+                {
+
+                    <div class="col-md-2 " style="min-height: 200px;">
+                        <div class="card" >
+                            @*<a href="#">
+                                <object  class="img-rounded" data="~/Images/@Html.DisplayFor(modelItem => item.ProductURL)" type="image/png" width="100" height="100">
+                                    <img src="~/Images/noimage.jpg" width="100" height="100">
+                                </object>
+                            </a>*@
+                            <div class="card-body" >
+
+                                    <h4 class="card-title myNewDivHeight">
+                                        <a href="#">@Html.DisplayFor(modelItem => item.Name)</a>
+
+                                    </h4>
+
+                                <h5>@Html.DisplayFor(modelItem => item.Amount)</h5>
+                                <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+                            </div>
+                            <div class="card-footer">
+                               @Html.ActionLink("Edit", "Edit", new { id = item.ProductID })
+                                <small class="text-muted">★ ★ ★ ★ ☆</small>
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ProductID })
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+
+
+
+
+
+        </div>
+        x++;
+    }
+</div>
+

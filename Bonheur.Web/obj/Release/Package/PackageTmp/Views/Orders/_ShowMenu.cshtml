@@ -1,0 +1,98 @@
+﻿
+@model Bonheur.Web.Models.BonheurObjects.OrderObject
+@{ var x = 0;
+    var activeclass = "active";
+}
+
+<ul class="nav nav-tabs">
+
+    @foreach (var cat in Model.Category)
+    {
+        var menuitem = "#menu" + cat.CategoryID;
+
+        if (x == 0)
+        {
+            <li class="active"> <a data-toggle="tab" href=@menuitem>@cat.Name</a></li>}
+        else
+        {
+            <li> <a data-toggle="tab" href=@menuitem>@cat.Name</a></li>}
+        x++;
+    }
+    @{   x = 0; }
+
+
+</ul>
+
+<div class="tab-content">
+
+    @foreach (var cat in Model.Category)
+    {
+        var menuitem = "menu" + cat.CategoryID;
+        if (x == 0)
+        {
+            activeclass = "active in";
+        }
+        else
+        {
+            activeclass = "";
+        }
+        <div id=@menuitem class="tab-pane fade @activeclass">
+            <br />
+           
+                <div class="row">
+                    @foreach (var item in cat.Products.Where(a => a.CategoryID == cat.CategoryID).OrderBy(a=>a.Name))
+                    {
+
+                        <div class="col-md-2" style="min-height: 120px;">
+                            <div class="thumbnail">
+                                @*<a href="#"><object data="~/Images/@Html.DisplayFor(modelItem => item.ProductURL)" type="image/png" width="100" height="100">
+                                                <img class="card-img-top" src="~/Images/noimage.jpg" width="100" height="100">    
+                                            </object></a>*@
+                                <div class="card-body">
+                                    <h5 class="card-title"> @Html.DisplayFor(modelItem => item.Name)
+                                        <a href="#"></a>
+                                    </h5>
+                                    <h6>@Html.DisplayFor(modelItem => item.Amount)</h6>
+                                    @*<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>*@
+                                </div>
+                                <div class="card-footer text-center">
+                                    @if (!Model.Order.isPaid)
+                                    {
+                                    @Html.ActionLink("Add Order", "AddOrder", new { id = item.ProductID, orderid = Model.Order.OrderID }, new { @class = "btn btn-success" })}
+                                    @*<small class="text-muted">★ ★ ★ ★ ☆</small>*@
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                 </div>
+              
+                   
+   
+     
+
+
+    </div>
+        x++;
+    }
+    </div>
+
+    @*<script type="text/javascript">
+            $('#myTab a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            // store the currently selected tab in the hash value
+            $("ul.nav-tabs > li > a").on("shown.bs.tab", function (e) {
+                var id = $(e.target).attr("href").substr(1);
+                window.location.hash = id;
+            });
+
+            // on load of the page: switch to the currently selected tab
+            var hash = window.location.hash;
+            $('#myTab a[href="' + hash + '"]').tab('show');
+
+         // Ref: http://stackoverflow.com/questions/18999501/bootstrap-3-keep-selected-tab-on-page-refresh
+        </script>*@
+

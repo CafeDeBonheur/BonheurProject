@@ -1,0 +1,50 @@
+﻿@model Bonheur.Web.Models.PurchaseItem
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PurchaseItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.UnitCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UnitCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Purchase.InvoiceNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Purchase.InvoiceNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseCategory.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseCategory.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PurchaseItemID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
